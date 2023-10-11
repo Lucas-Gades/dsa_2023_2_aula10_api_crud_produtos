@@ -1,4 +1,6 @@
 const express = require('express')
+const produtoService = require('./service/produto_service')
+
 const app = express()
 const port = 3000
 
@@ -9,18 +11,32 @@ app.get('/', (req, res) => {
 })
 
 app.get('/produtos', (req, res) => {
-    res.json({msg:'Listar Produtos'})
+  const listaProdutos = produtoService.listar();
+  res.json(listaProdutos);
 })
 
 app.post('/produtos', (req, res) => {
     let produto = req.body;
-    console.log(produto);
-    res.status(201).json({msg:'Inserir Produtos'})
+    try {
+      produtoService.inserir(produto);
+      res.status(201).json({msg:'Inserido com sucesso!'})
+    }
+    catch(err) {
+      //id-> 400 / msg -> msg de erro
+      res.status(err.id).json({msg: err.message});
+    }
 })
 
 app.get('/produtos/:id', (req, res) => {
-    const id = req.params.id;
-    res.json({msg:'Buscar pelo id: '+id});
+    const id = +req.params.id;
+    try {
+      const prod = produtoService.buscarPorId(id);
+      res.json(prod);
+    }
+    catch(err) {
+      //id-> 404 / msg -> msg de erro
+      res.status(err.id).json({msg: err.message});
+    }
 })
 
 app.put('/produtos/:id', (req, res) => {
