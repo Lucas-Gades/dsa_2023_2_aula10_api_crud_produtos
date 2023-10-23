@@ -1,10 +1,11 @@
 const express = require('express')
-const produtoService = require('./service/produto_service')
-
+const produtoService = require('./service/produto_service');
+const { inserir } = require('./repository/produto_repository');
 const app = express()
 const port = 3000
-
 app.use(express.json());
+
+
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
@@ -55,3 +56,4 @@ app.delete('/produtos/:id', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
